@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const users_1 = require("../db/users");
+const users_1 = require("../model/users");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const router = (0, express_1.Router)();
 router.post("/login", async (req, res) => {
@@ -21,7 +21,9 @@ router.post("/login", async (req, res) => {
         res.status(400).json({ message: "Invalid email or password" });
         return;
     }
-    res.status(200).json({ message: "Login successful", user });
+    const userData = user.toObject();
+    const { password: _, ...safeUser } = userData;
+    res.status(200).json({ message: "Login successful", user: safeUser });
 });
 exports.default = router;
 //# sourceMappingURL=login.js.map

@@ -15,7 +15,7 @@ app.use(express.json())
 
 app.use(logger)     
 app.use(requestCounter)
-app.use(userRouter)
+app.use("/user", userRouter)
 
 app.use((err:Error,req:Request,res:Response, next:NextFunction)=>{
     console.log(err.message)
