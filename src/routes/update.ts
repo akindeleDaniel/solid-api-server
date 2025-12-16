@@ -1,5 +1,6 @@
 import { Router,Request,Response } from "express"
-import { userModel } from "../db/users"
+import { userModel } from "../model/users"
+import bcrypt from "bcrypt"
 
 const router = Router()
 
@@ -17,13 +18,18 @@ const user = await userModel.findOne({email})
 
     if(firstName) user.firstName=firstName
     if(lastName) user.lastName=lastName
-    if(password) user.password=password
     if(dateOfBirth) user.dateOfBirth=dateOfBirth
     if(gender)user.gender=gender
 
+    if (password){
+        const hidden = await bcrypt.hash(password, 10)
+        user.password = hidden
+    }
         await user.save()
-    
-    res.status(200).json({message:'User updated successfully', user})
+    const userObject = user.toObject()
+    const {password:_, ...safeUser} = userObject
+    res.status(200).json({message:'User updated successfully', user:safeUser
+    })
 })
 
     export default router

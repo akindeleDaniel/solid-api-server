@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express"
-import { userModel } from "../db/users"
+import { userModel } from "../model/users"
 import bcrypt from "bcrypt"
 const router = Router()
 
@@ -18,7 +18,10 @@ router.post("/login", async (req: Request, res: Response) => {
      res.status(400).json({ message: "Invalid email or password" })
  return}
 
-  res.status(200).json({ message: "Login successful", user })
+ const userData= user.toObject()
+ const {password:_, ...safeUser} =userData
+
+  res.status(200).json({ message: "Login successful", user:safeUser })
 })
 
 export default router
